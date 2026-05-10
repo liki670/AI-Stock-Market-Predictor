@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Stock Predictor 3D</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Chart.js for 2D charts overlay -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- 3D Background Canvas -->
+    <canvas id="webgl-canvas"></canvas>
+
+    <!-- Main UI Overlay -->
+    <main class="ui-layer">
+        
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar glass-panel">
+            <div class="logo">
+                <i class="fa-solid fa-layer-group"></i>
+                <h2>AI Quant</h2>
+            </div>
+
+            <div class="search-box">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="ticker-input" placeholder="Search symbol... (e.g. AAPL, RELIANCE.NS)">
+            </div>
+
+            <div class="quick-links">
+                <h3>Global</h3>
+                <div class="pill-group">
+                    <button class="pill" data-ticker="AAPL">Apple</button>
+                    <button class="pill" data-ticker="TSLA">Tesla</button>
+                    <button class="pill" data-ticker="NVDA">Nvidia</button>
+                </div>
+                <h3>Indian</h3>
+                <div class="pill-group">
+                    <button class="pill" data-ticker="RELIANCE.NS">Reliance</button>
+                    <button class="pill" data-ticker="TCS.NS">TCS</button>
+                    <button class="pill" data-ticker="HDFCBANK.NS">HDFC</button>
+                </div>
+            </div>
+
+            <button id="analyze-btn" class="primary-btn pulse-anim">
+                <i class="fa-solid fa-microchip"></i> Analyze Now
+            </button>
+        </aside>
+
+        <!-- Dashboard Content -->
+        <section class="dashboard">
+            <!-- Loading State -->
+            <div id="loading-overlay" class="loading-overlay hidden">
+                <div class="spinner"></div>
+                <p id="loading-text">Synthesizing Data...</p>
+            </div>
+
+            <!-- Header -->
+            <header class="dash-header">
+                <div>
+                    <h1 id="stock-name">Select a Stock</h1>
+                    <p id="stock-ticker" class="text-gradient">Ready for analysis</p>
+                </div>
+                <div id="signal-badge" class="signal-badge glass-panel hidden">
+                    <span id="signal-text">HOLD</span>
+                </div>
+            </header>
+
+            <!-- Metrics Grid -->
+            <div class="metrics-grid">
+                <div class="metric-card glass-panel">
+                    <i class="fa-solid fa-dollar-sign metric-icon"></i>
+                    <h4>Current Price</h4>
+                    <h2 id="current-price">--</h2>
+                </div>
+                <div class="metric-card glass-panel">
+                    <i class="fa-solid fa-bullseye metric-icon"></i>
+                    <h4>Predicted Price</h4>
+                    <h2 id="predicted-price">--</h2>
+                </div>
+                <div class="metric-card glass-panel">
+                    <i class="fa-solid fa-chart-line metric-icon"></i>
+                    <h4>Expected Change</h4>
+                    <h2 id="pct-change">--</h2>
+                </div>
+                <div class="metric-card glass-panel">
+                    <i class="fa-solid fa-brain metric-icon"></i>
+                    <h4>AI Confidence</h4>
+                    <h2 id="confidence">--</h2>
+                    <div class="progress-bar"><div id="conf-bar" class="progress-fill"></div></div>
+                </div>
+            </div>
+
+            <!-- Lower Section -->
+            <div class="lower-grid">
+                <!-- AI Explanation -->
+                <div class="explanation-card glass-panel">
+                    <h3><i class="fa-solid fa-robot"></i> AI Analysis</h3>
+                    <p id="explanation-text">Run an analysis to see the LSTM deep learning explanation here.</p>
+                    
+                    <div class="technical-stats hidden" id="tech-stats">
+                        <div class="stat"><span class="label">RSI (14)</span><span id="val-rsi" class="val">--</span></div>
+                        <div class="stat"><span class="label">Sentiment</span><span id="val-sent" class="val">--</span></div>
+                        <div class="stat"><span class="label">MACD Hist</span><span id="val-macd" class="val">--</span></div>
+                    </div>
+                </div>
+
+                <!-- Chart -->
+                <div class="chart-card glass-panel">
+                    <canvas id="priceChart"></canvas>
+                </div>
+            </div>
+
+        </section>
+    </main>
+
+    <!-- Three.js Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="main.js"></script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+tensorflow
+flask
+flask-cors
+streamlit
+yfinance
+scikit-learn
+textblob
+requests
+python-dotenv
+plotly
+pandas
+numpy
+pandas-ta
+gunicorn

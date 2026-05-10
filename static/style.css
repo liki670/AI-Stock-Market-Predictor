@@ -1,0 +1,335 @@
+:root {
+    --bg-color: #050508;
+    --glass-bg: rgba(16, 20, 32, 0.4);
+    --glass-border: rgba(99, 179, 237, 0.15);
+    --primary: #4f46e5;
+    --primary-glow: rgba(79, 70, 229, 0.5);
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    
+    /* Signals */
+    --buy-color: #10b981;
+    --buy-glow: rgba(16, 185, 129, 0.4);
+    --sell-color: #ef4444;
+    --sell-glow: rgba(239, 68, 68, 0.4);
+    --hold-color: #f59e0b;
+    --hold-glow: rgba(245, 158, 11, 0.4);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    overflow: hidden; /* Prevent scrolling, 3D takes full screen */
+}
+
+/* 3D Canvas */
+#webgl-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 0;
+    pointer-events: none; /* Let clicks pass through to the 3D scene if needed, but here we want UI to catch clicks */
+}
+
+/* UI Overlay Layer */
+.ui-layer {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+    background: radial-gradient(circle at center, transparent 0%, rgba(5,5,8,0.8) 100%);
+}
+
+/* Glassmorphism utility */
+.glass-panel {
+    background: var(--glass-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+/* Sidebar */
+.sidebar {
+    width: 320px;
+    margin: 24px;
+    padding: 32px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 24px;
+    font-weight: 800;
+    background: linear-gradient(to right, #fff, #94a3b8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.logo i {
+    color: var(--primary);
+    -webkit-text-fill-color: var(--primary);
+}
+
+.search-box {
+    position: relative;
+}
+.search-box i {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+}
+.search-box input {
+    width: 100%;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    padding: 16px 16px 16px 48px;
+    color: white;
+    font-family: 'Inter';
+    font-size: 15px;
+    outline: none;
+    transition: all 0.3s ease;
+}
+.search-box input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 15px var(--primary-glow);
+}
+
+.quick-links h3 {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+}
+.pill-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 24px;
+}
+.pill {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: var(--text-main);
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.pill:hover {
+    background: rgba(255,255,255,0.1);
+    transform: translateY(-2px);
+}
+
+.primary-btn {
+    margin-top: auto;
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 18px;
+    border-radius: 14px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 20px var(--primary-glow);
+}
+.primary-btn:hover {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 8px 30px var(--primary-glow);
+}
+
+/* Dashboard Area */
+.dashboard {
+    flex: 1;
+    padding: 24px 24px 24px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    position: relative;
+}
+
+.dash-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+.dash-header h1 {
+    font-family: 'Outfit', sans-serif;
+    font-size: 48px;
+    font-weight: 800;
+    margin-bottom: 4px;
+}
+.text-gradient {
+    color: var(--text-muted);
+    font-size: 18px;
+}
+
+.signal-badge {
+    padding: 16px 48px;
+    border-radius: 50px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-align: center;
+}
+.signal-BUY { background: var(--buy-glow); border-color: var(--buy-color); color: var(--buy-color); text-shadow: 0 0 10px var(--buy-color); }
+.signal-SELL { background: var(--sell-glow); border-color: var(--sell-color); color: var(--sell-color); text-shadow: 0 0 10px var(--sell-color); }
+.signal-HOLD { background: var(--hold-glow); border-color: var(--hold-color); color: var(--hold-color); text-shadow: 0 0 10px var(--hold-color); }
+
+.metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+}
+.metric-card {
+    padding: 24px;
+    position: relative;
+    overflow: hidden;
+}
+.metric-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+}
+.metric-icon {
+    font-size: 24px;
+    color: var(--primary);
+    margin-bottom: 16px;
+    opacity: 0.8;
+}
+.metric-card h4 {
+    color: var(--text-muted);
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+}
+.metric-card h2 {
+    font-size: 32px;
+    font-family: 'Outfit', sans-serif;
+}
+.positive { color: var(--buy-color); }
+.negative { color: var(--sell-color); }
+
+.progress-bar {
+    width: 100%;
+    height: 6px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 3px;
+    margin-top: 12px;
+    overflow: hidden;
+}
+.progress-fill {
+    height: 100%;
+    background: var(--primary);
+    width: 0%;
+    transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.lower-grid {
+    display: grid;
+    grid-template-columns: 350px 1fr;
+    gap: 24px;
+    flex: 1;
+    min-height: 0;
+}
+
+.explanation-card {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+.explanation-card h3 {
+    font-size: 18px;
+    color: white;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.explanation-card p {
+    color: var(--text-muted);
+    line-height: 1.6;
+    font-size: 14px;
+    flex: 1;
+    overflow-y: auto;
+}
+.technical-stats {
+    background: rgba(0,0,0,0.2);
+    border-radius: 12px;
+    padding: 16px;
+}
+.stat {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-size: 13px;
+}
+.stat:last-child { margin-bottom: 0; }
+.stat .label { color: var(--text-muted); }
+.stat .val { font-family: monospace; font-size: 14px; color: white; }
+
+.chart-card {
+    padding: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+.chart-card canvas {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+/* Loading Overlay */
+.loading-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(5, 5, 8, 0.8);
+    backdrop-filter: blur(8px);
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 20px;
+    gap: 20px;
+}
+.spinner {
+    width: 50px;
+    height: 50px;
+    border: 3px solid rgba(79, 70, 229, 0.3);
+    border-top-color: var(--primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+@keyframes spin { 100% { transform: rotate(360deg); } }
+
+.hidden { display: none !important; }
